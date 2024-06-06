@@ -50,6 +50,6 @@ int main()
     int** mainSet = generateCardsSet();
     shuffleCardSet(mainSet);
     show(mainSet);
-
+    // todo 
     
 }
