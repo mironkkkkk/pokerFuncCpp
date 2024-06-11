@@ -135,9 +135,18 @@ int main()
         }
     }
 
+    cout << endl;
+
     for (int i = 0; i < playersCount; i++) {
         showPlayer(playersName[i], cash[i], playersSets[i]);
     }
+
+    int** tabletSet = new int* [0];
+    for (int i = 0; i < 3; i++) {
+        transferTopCard(mainSet, tabletSet);
+    }
+    cout << "стол: ";
+    show(tabletSet);
 
     while (true)
     {
@@ -145,3 +154,4 @@ int main()
     }
 
 }
+ 
