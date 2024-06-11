@@ -62,7 +62,7 @@ void show(int** arr) {
 }
 
 string* createPlayers(int count) {
-    if (count > 6 || count < 1) {
+    if (count > 6 || count < 3) {
         cout << "недостаточное кол-во игроков" << endl;
         return nullptr;
     }
@@ -121,7 +121,7 @@ int main()
     shuffleCardSet(mainSet);
     show(mainSet);
     int playersCount = 6;
-    int* cash = createCash(playersCount, 1000);
+    int* cash = createCash(playersCount, DEFAULT_CASH);
     string* playersName = createPlayers(playersCount);
     int*** playersSets = new int** [playersCount];
 
@@ -148,9 +148,53 @@ int main()
     cout << "стол: ";
     show(tabletSet);
 
+    int blinde = DEFAULT_CASH/20;
+    int smallBlinde = blinde / 2;
+    int indexSmallBlinde = 0;
+    int currentPlayer;
+
     while (true)
     {
+        if (indexSmallBlinde > playersCount - 1) {
+            indexSmallBlinde = 0;
+        }
+        currentPlayer = indexSmallBlinde;
 
+        if(cash[indexSmallBlinde] >= smallBlinde){
+            cash[currentPlayer++] -= smallBlinde;
+        }
+
+        if (cash[indexSmallBlinde + 1] >= blinde) {
+            cash[currentPlayer++] -= blinde;
+        }
+
+        for (int i = indexSmallBlinde; i < playersCount; i++) {
+            cout << "введите кол-во ставку: ";
+            int currentBlinde;
+            cin >> currentBlinde;
+            if (currentBlinde == 0) {
+                cout << "игрок пасанул: " << endl;
+                continue;
+            }
+            else if (currentBlinde < blinde) {
+                cout << "недостааточно ставка: " << endl;
+                i--;
+                continue;
+            }
+            else if(currentBlinde < cash[i]) {
+                cout << "недостааточно денег: " << endl;
+                i--;
+                continue;
+            }
+            else {
+                cout << "ставка принята: " << endl;
+                cash[i] -= currentBlinde;
+            }
+        }
+
+        for (int i = 0; i < indexSmallBlinde; i++) {
+
+        }
     }
 
 }
