@@ -1,9 +1,10 @@
 ﻿#include <iostream>
 #define random(a,b) a + rand()% b + 1 - a
 using namespace std;
+#include "protoTypes.h"
+#include "constants.h"
 
-const string NAMES[] = { "Вася", "Катя", "Ира", "Коля", "Жора", "Игорь", "Гога" };
-const int COUNT_NAMES = 7;
+
 
 int** generateCardsSet() {
 
@@ -22,6 +23,12 @@ void shuffleCardSet(int** arr) {
     for (int i = 0; i < 52; i++) {
         swap(arr[i], arr[random(0, size - 1)]);
     }
+}
+
+void showPlayer(string players, int cash, int**& playersSet) {
+    cout << players << "\t" << cash << "$" << " [";
+    show(playersSet);
+    cout << "] " << endl;
 }
 
 int* createCash(int countPlayer, int countMoney) {
@@ -55,16 +62,17 @@ void show(int** arr) {
 }
 
 string* createPlayers(int count) {
-    if (count > 5 || count < 1) {
+    if (count > 6 || count < 1) {
         cout << "недостаточное кол-во игроков" << endl;
         return nullptr;
     }
     else {
         string* arr = new string[count];
-        for (int i = 0, flag; i < count; i++) {
+        arr[0] = "Игрок";
+        for (int i = 1, flag; i < count; i++) {
             arr[i] = NAMES[random(0, COUNT_NAMES - 1)];
             flag = false;
-            for (int j = 0; j < i; j++) {
+            for (int j = 1; j < i; j++) {
                 if (arr[i] == arr[j]) {
                     flag = true;
                     break;
@@ -84,6 +92,27 @@ void showPlayers(string*& players, int* cash, int count) {
     }
 }
 
+void transferTopCard(int**& outSet, int**& inSet) {
+    int countOutSet = _msize(outSet) / sizeof(outSet[0]);
+    int countInSet = _msize(inSet) / sizeof(inSet[0]);
+
+    int** outSetBuf = new int* [countOutSet - 1];
+    int** inSetBuf = new int* [countInSet + 1];
+
+    for (int i = 0; i < countOutSet - 1; i++) {
+        outSetBuf[i] = outSet[i];
+    }
+
+    for (int i = 0; i < countInSet; i++) {
+        inSetBuf[i] = inSet[i];
+    }
+    inSetBuf[countInSet] = outSet[countOutSet - 1];
+    delete[] inSet;
+    delete[] outSet;
+    inSet = inSetBuf;
+    outSet = outSetBuf;
+}
+
 int main()
 {
     srand(time(NULL));
@@ -91,9 +120,28 @@ int main()
     int** mainSet = generateCardsSet();
     shuffleCardSet(mainSet);
     show(mainSet);
-    int playersCount = 5;
+    int playersCount = 6;
     int* cash = createCash(playersCount, 1000);
     string* playersName = createPlayers(playersCount);
-    showPlayers(playersName, cash, playersCount);
+    int*** playersSets = new int** [playersCount];
+
+    for (int i = 0; i < playersCount; i++) {
+        playersSets[i] = new int* [0];
+    }
+
+    for (int i = 0; i < playersCount; i++) {
+        for (int j = 0; j < 2; j++) {
+            transferTopCard(mainSet, playersSets[i]);
+        }
+    }
+
+    for (int i = 0; i < playersCount; i++) {
+        showPlayer(playersName[i], cash[i], playersSets[i]);
+    }
+
+    while (true)
+    {
+
+    }
 
 }
