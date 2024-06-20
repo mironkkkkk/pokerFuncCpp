@@ -345,6 +345,10 @@ void startGame(int playersCount, string*& playersName, int*& cash, int**& mainSe
     int roundNumber = 1;
     while (true)
     {
+        showGame(mainSet, playersName, cash,
+            playersSets, playersCount, tableSet, bank, currentBlinde,
+            checkPlayers);
+
         firstRound(roundNumber++, indexSmallBlinde, playersCount, cash,
             bank, checkPlayers, playersName, currentBlinde);
 
@@ -358,10 +362,6 @@ void startGame(int playersCount, string*& playersName, int*& cash, int**& mainSe
         if (roundNumber == 4) break;
 
         transferTopCard(mainSet, tableSet);
-
-        showGame(mainSet, playersName, cash,
-            playersSets, playersCount, tableSet, bank, currentBlinde,
-            checkPlayers);
 
         resetCurrentBlinde(currentBlinde);
 
