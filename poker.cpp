@@ -382,3 +382,4 @@ int main()
     startSettings(mainSet, playersCount, playersName, cash);
     startGame(playersCount, playersName, cash, mainSet);
 }
+// test
